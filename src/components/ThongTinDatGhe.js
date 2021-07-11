@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 
-export default class ThongTinDatGhe extends Component {
+import { connect } from "react-redux";
+import { huyGheAction } from ".././redux/actions/BookingTicketAction";
+
+class ThongTinDatGhe extends Component {
   render() {
     return (
       <div>
@@ -14,7 +17,7 @@ export default class ThongTinDatGhe extends Component {
           <button className="ghe ml-0"></button>
           <span className="infoTicket__text">Ghế chưa đặt</span>
         </div>
-        <div className="infoTicket__table">
+        <div className="infoTicket__table mt-4">
           <table className="table" border="2">
             <thead>
               <tr>
@@ -23,23 +26,36 @@ export default class ThongTinDatGhe extends Component {
                 <th>Hủy</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th>Số ghế</th>
-                <th></th>
-                <th></th>
-              </tr>
-              <tr>
-                <th>Số ghế</th>
-                <th></th>
-                <th></th>
-              </tr>
+            <tbody className="text-warning">
+              {this.props.danhsachGheDangDat.map((gheDangDat, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{gheDangDat.soGhe}</td>
+                    <td>{gheDangDat.gia.toLocaleString()}</td>
+                    <td>
+                      <i
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          this.props.dispatch(huyGheAction(gheDangDat.soGhe));
+                        }}
+                        className="fa fa-times text-danger"
+                      ></i>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot>
               <tr>
-                <th>Tổng tiền</th>
-                <th></th>
-                <th></th>
+                <td>Tổng tiền</td>
+                <td>
+                  {this.props.danhsachGheDangDat
+                    .reduce((tongTien, gheDangDat, index) => {
+                      return (tongTien += gheDangDat.gia);
+                    }, 0)
+                    .toLocaleString()}
+                </td>
+                <td></td>
               </tr>
             </tfoot>
           </table>
@@ -48,3 +64,11 @@ export default class ThongTinDatGhe extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    danhsachGheDangDat: state.BookingTicketReducer.danhsachGheDangDat,
+  };
+};
+
+export default connect(mapStateToProps)(ThongTinDatGhe);

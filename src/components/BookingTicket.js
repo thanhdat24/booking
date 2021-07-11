@@ -1,11 +1,21 @@
 import "./BookingTicket.css";
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import HangGhe from "./HangGhe";
 import ThongTinDatGhe from "./ThongTinDatGhe";
+import danhSachGhe from "./Data/danhSachGhe.json";
 
 export default class BookingTicket extends Component {
+  renderHangGhe = () => {
+    return danhSachGhe.map((hangGhe, index) => {
+      return (
+        <Fragment key={index}>
+          <HangGhe hangGhe={hangGhe} soHangGhe={index} />
+        </Fragment>
+      );
+    });
+  };
   render() {
     return (
       <div className="bookingMovie">
@@ -20,13 +30,11 @@ export default class BookingTicket extends Component {
               <div className="centerScreen">
                 <div className="bookingMovie__screen"></div>
               </div>
-              <HangGhe />
+              {this.renderHangGhe()}
             </div>
             <div className="col-4">
               <div className="infoTicket">
-                  <div className="infoTicket__header">
-                      Danh sách ghế bạn chọn
-                  </div>
+                <div className="infoTicket__header">Danh sách ghế bạn chọn</div>
                 <ThongTinDatGhe />
               </div>
             </div>
